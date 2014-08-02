@@ -1,0 +1,7 @@
+{
+    "name": "hpar/PrestashopBridge",
+    "license": "MIT",
+    "require": {
+       "symfony/http-foundation": ">2.1"
+    }
+}
