@@ -43,7 +43,14 @@ class PrestashopBridge {
 
 
 	public function userExist($email) {
+		$this->loadPrestaKernel();
 
+		$customer = new \Customer();
+		$authentication = $customer->getByEmail($email);
+
+		if (!$authentication)
+			return false;
+		return true;
 	}
 
 
