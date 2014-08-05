@@ -11,8 +11,13 @@ class PrestashopBridge {
 	protected $id_shop;
 
 	public function __construct($pathToPrestashop, $id_shop = 1) {
-		$this->pathToPrestashop = $pathToPrestashop;
 		$this->id_shop = $id_shop;
+
+		if (!$pathToPrestashop || $pathToPrestashop == '')
+			$pathToPrestashop = '.';
+
+		$this->pathToPrestashop = $pathToPrestashop;
+
 	}
 
 	/*
