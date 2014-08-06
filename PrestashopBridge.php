@@ -129,4 +129,16 @@ class PrestashopBridge {
 			$ctx->customer->logout();
 	}
 
+	//add a product to the cart with quantity and a reference
+	public function addToCurrentCart($idProduct, $quantity = 1, $ref = null) {
+
+		$ctx = \Context::getContext();
+		$cart = $ctx->cart;
+
+		if ($ref)
+			$cart->addTextFieldToProduct($idProduct, 1, \Product::CUSTOMIZE_TEXTFIELD, $ref);
+		$cart->updateQty($quantity, $idProduct);
+	}
+
+
 }
