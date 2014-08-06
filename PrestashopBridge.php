@@ -18,6 +18,7 @@ class PrestashopBridge {
 
 		$this->pathToPrestashop = $pathToPrestashop;
 
+		$this->loadPrestaKernel();
 	}
 
 	/*
@@ -43,7 +44,6 @@ class PrestashopBridge {
 
 
 	public function userExist($email) {
-		$this->loadPrestaKernel();
 
 		$customer = new \Customer();
 		$authentication = $customer->getByEmail($email);
@@ -55,7 +55,6 @@ class PrestashopBridge {
 
 
 	public function login($email) {
-		$this->loadPrestaKernel();
 
 		$customer = new \Customer();
 		$authentication = $customer->getByEmail($email);
@@ -124,7 +123,6 @@ class PrestashopBridge {
 	}
 
 	public function logout() {
-		$this->loadPrestaKernel();
 
 		$ctx = \Context::getContext();
 		if (!$ctx)
