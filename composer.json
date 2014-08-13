@@ -1,7 +1,13 @@
 {
-    "name": "hpar/PrestashopBridge",
+    "name": "hpar/prestashop-bridge",
+    "description": "Integrate prestashop in an existing php application",
     "license": "MIT",
     "require": {
-       "symfony/http-foundation": ">2.1"
+       "symfony/http-foundation": "~2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hpar\\PrestashopBridge\\": ""
+        }
     }
 }
