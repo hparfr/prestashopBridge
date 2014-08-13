@@ -135,9 +135,19 @@ class PrestashopBridge {
 		$ctx = \Context::getContext();
 		$cart = $ctx->cart;
 
-		if ($ref)
-			$cart->addTextFieldToProduct($idProduct, 1, \Product::CUSTOMIZE_TEXTFIELD, $ref);
-		$cart->updateQty($quantity, $idProduct);
+		if ($ref) { //do not add twice the same ref
+
+			$customiziations = $ctx->cart->getProductCustomization($idProduct);
+			$customWithRef = array_filter($customiziations, function ($c) use ($ref) {
+				return $ref == $c['value'];
+			});
+
+			if (!$customWithRef) { //not already present
+				$cart->addTextFieldToProduct($idProduct, 1, \Product::CUSTOMIZE_TEXTFIELD, $ref);
+				$cart->updateQty($quantity, $idProduct);
+			}
+		} else
+			$cart->updateQty($quantity, $idProduct);
 	}
 
 
