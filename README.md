@@ -18,7 +18,7 @@ Features:
  - Create carts
 
 
- Requirements:
+Requirements:
 
  - should be installed in the same server than prestashop (because some  Prestashop code is loaded with _include()_  )
  - should be served from the same domain:port than Prestashop (because of the auth cookie)
