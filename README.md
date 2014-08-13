@@ -10,16 +10,18 @@ Benefits:
  - customers don't have to create an account in Prestashop
  - customers authenticate only in your application
 
+
 Features:
 
  - Login / Logout customers
  - Create customers
  - Create carts
 
+
  Requirements:
 
  - should be installed in the same server than prestashop (because some  Prestashop code is loaded with _include()_  )
- - should be server from the same domain:port than Prestashop (because of the auth cookie)
+ - should be served from the same domain:port than Prestashop (because of the auth cookie)
 
 
 
@@ -30,7 +32,7 @@ Ce projet vous est utile si vous voulez que :
 
 - vos clients n'aient qu'un seul mot de passe pour votre site et pour votre boutique
 - vos que vos clients ne s'authentifient que par votre site
-- utiliser une autre méthode d'authentification (2-facteurs, OAuth, CAS, ...)
+- utiliser une autre méthode d'authentification (2-facteurs, OAuth, CAS, ...) que celles proposent par Prestashop.
 
 
 Fonctionnalités :
@@ -51,17 +53,17 @@ Installation
 
 In your composer.json:
 
-	{
-		"require": {
-			"hpar/prestashop-bridge": "dev-master"
-		},
-		"repositories": [{
-			"type": "vcs",
-			"url": "https://github.com/hparfr/prestashopBridge.git"
-		}]
-	}
-
-
+```json
+{
+	"require": {
+		"hpar/prestashop-bridge": "dev-master"
+	},
+	"repositories": [{
+		"type": "vcs",
+		"url": "https://github.com/hparfr/prestashopBridge.git"
+	}]
+}
+```
 
 
 Example
@@ -69,36 +71,39 @@ Example
 
 In a symfony application:
 
-	<?php 
+```php
+<?php 
 
-	namespace Acme\DemoBundle\Controller;
+namespace Acme\DemoBundle\Controller;
 
-	use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-	use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-	use Hpar\PrestashopBridge\PrestashopBridge;
+use Hpar\PrestashopBridge\PrestashopBridge;
 
-	class PrestashopBridgeExampleController extends Controller
+class PrestashopBridgeExampleController extends Controller
+{
+	public function loginAction()
 	{
-		public function loginAction()
-		{
-			if (!$this->get('security.context')->isGranted('ROLE_USER')) {
-				throw new AccessDeniedException();
-			}
-
-			$prestaBridge = new PrestashopBridge('/path/to/prestashop/', 1);
-
-			$user = $this->getUser(); //get connected user
-
-			if (!$prestaBridge->userExist($user->getEmail())) //if user exist in prestahop database
-				$prestaBridge->createUser(
-					$user->getEmail(),
-					$user->getLastName(),
-					$user->getFirstName()
-				);
-
-			$prestaBridge->login($email);
-
-			return $this->redirect('http://prestashop_url/');
+		if (!$this->get('security.context')->isGranted('ROLE_USER')) {
+			throw new AccessDeniedException();
 		}
+
+		$prestaBridge = new PrestashopBridge('/path/to/prestashop/', 1);
+
+		$user = $this->getUser(); //get connected user
+
+		if (!$prestaBridge->userExist($user->getEmail())) //if user exist in prestahop database
+			$prestaBridge->createUser(
+				$user->getEmail(),
+				$user->getLastName(),
+				$user->getFirstName()
+			);
+
+		$prestaBridge->login($email);
+
+		return $this->redirect('http://prestashop_url/');
 	}
+}
+
+```
