@@ -100,7 +100,7 @@ class PrestashopBridgeExampleController extends Controller
 				$user->getFirstName()
 			);
 
-		$prestaBridge->login($email);
+		$prestaBridge->login($user->getEmail());
 
 		return $this->redirect('http://prestashop_url/');
 	}

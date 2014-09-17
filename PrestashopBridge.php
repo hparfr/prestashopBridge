@@ -145,6 +145,12 @@ class PrestashopBridge {
 			if (!$customWithRef) { //not already present
 				$cart->addTextFieldToProduct($idProduct, 1, \Product::CUSTOMIZE_TEXTFIELD, $ref);
 				$cart->updateQty($quantity, $idProduct);
+			} else { //already present, remplace quantity (if needed)
+				$custom = $customWithRef[0];
+				$qtyDiff = $quantity - $custom['quantity'];
+				$upOrDown = ($qtyDiff > 0) ? 'up' : 'down'; //updateQty only change relatively
+				if ($qtyDiff !== 0)
+					$cart->updateQty( abs($qtyDiff), $idProduct, null, $custom['id_customization'], $upOrDown);
 			}
 		} else
 			$cart->updateQty($quantity, $idProduct);
