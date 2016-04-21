@@ -125,7 +125,7 @@ class PrestashopBridge {
 	public function logout() {
 
 		$ctx = \Context::getContext();
-		if (!$ctx)
+		if ($ctx)
 			$ctx->customer->logout();
 	}
 
