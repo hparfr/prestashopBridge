@@ -10,8 +10,12 @@ class PrestashopBridge {
 	protected $pathToPrestashop;
 	protected $id_shop;
 
-	public function __construct($pathToPrestashop, $id_shop = 1) {
-		$this->id_shop = $id_shop;
+	/**
+	* @param string pathToPrestashop : path to prestashop source code
+	* @param int idShop: id of the shop
+	*/
+	public function __construct($pathToPrestashop, $idShop = 1) {
+		$this->idShop = $idShop;
 
 		if (!$pathToPrestashop || $pathToPrestashop == '')
 			$pathToPrestashop = '.';
@@ -35,14 +39,16 @@ class PrestashopBridge {
 		//create new HttpFundation\Request
 		//add id_shop in $_GET
 		//copy $_SERVER from currentRequest
-		$cleanRequest = Request::create('', 'GET', array('id_shop'=> $this->id_shop), array(), array(), $currentRequest->server->all());
+		$cleanRequest = Request::create('', 'GET', array('id_shop'=> $this->idShop), array(), array(), $currentRequest->server->all());
 		$cleanRequest->overrideGlobals();
 
 		//init prestashop
 		include($this->pathToPrestashop.'/config/config.inc.php');
 	}
 
-
+	/**
+	* @param string email
+	*/
 	public function userExist($email) {
 
 		$customer = new \Customer();
@@ -53,7 +59,9 @@ class PrestashopBridge {
 		return true;
 	}
 
-
+	/**
+	* @param string email
+	*/
 	public function login($email) {
 
 		$customer = new \Customer();
@@ -98,7 +106,10 @@ class PrestashopBridge {
 	}
 
 	/**
-	* @param string password  md5 string or null
+	* @param string email
+	* @param string lastname
+	* @param string firstname
+	* @param string password : md5 string or null
 	* if password = null, login will only be possible by the current bridge
 	*/
 	public function createUser($email, $lastname, $firstname, $password = null) {
@@ -129,7 +140,12 @@ class PrestashopBridge {
 			$ctx->customer->logout();
 	}
 
-	//add a product to the cart with quantity and a reference
+	/**
+	* add a product to the cart with quantity and a reference
+	* @param int idProduct
+	* @param in quantity
+	* @param string ref
+	*/
 	public function addToCurrentCart($idProduct, $quantity = 1, $ref = null) {
 
 		$ctx = \Context::getContext();
