@@ -172,5 +172,48 @@ class PrestashopBridge {
 			$cart->updateQty($quantity, $idProduct);
 	}
 
+	//add a product to the cart with quantity and a reference as a GUEST
+	public function addToCart($idProduct, $quantity = 1, $ref = null) {
+
+		$ctx = \Context::getContext();//print("\n ctx: ");print_r($ctx);exit;
+
+		$guest = new \Guest();
+		$guest->save();
+
+		$ctx->cart = new \Cart();
+		$ctx->cart->id_currency = \Currency::getDefaultCurrency()->id;
+		$ctx->cart->id_lang = $ctx->language->id;
+		$ctx->cart->id_guest = (int)($guest->id);
+		$ctx->cart->save();
+
+		$ctx->cookie->id_cart = (int)$ctx->cart->id;//lerro honekin karritoan bistaratzia lortu dut.
+		$ctx->cookie->write();
+
+		$cart = $ctx->cart;
+
+		if ($ref) { //do not add twice the same ref
+
+			$customiziations = $ctx->cart->getProductCustomization($idProduct);//print("\n customiziations: ");print_r($customiziations);
+			$customWithRef = array_filter($customiziations, function ($c) use ($ref) {
+				return $ref == $c['value'];
+			});
+
+			if (!$customWithRef) { //not already present
+				$cart->addTextFieldToProduct($idProduct, 1, \Product::CUSTOMIZE_TEXTFIELD, $ref);
+				$cart->updateQty($quantity, $idProduct);
+				$ctx->cookie->write();
+			} else { //already present, remplace quantity (if needed)
+				$custom = $customWithRef[0];
+				$qtyDiff = $quantity - $custom['quantity'];
+				$upOrDown = ($qtyDiff >= 0) ? 'up' : 'down'; //updateQty only change relatively
+				if ($qtyDiff !== 0)
+					$cart->updateQty( abs($qtyDiff), $idProduct, null, $custom['id_customization'], $upOrDown);//print("\n cart: ");print_r($cart);
+				$ctx->cookie->write();
+			}
+		} else
+			$cart->updateQty($quantity, $idProduct);
+			$ctx->cookie->write();
+	}
+
 
 }
